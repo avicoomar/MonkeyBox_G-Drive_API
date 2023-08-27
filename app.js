@@ -90,7 +90,7 @@ app.get('/status', async (req, res, next) => {
     try {
         await connectMongoDB();
         const creds = await getMongoDBCreds();
-        res.send(JSON.stringify(JSON.parse(creds)));
+        res.send(JSON.stringify(creds));
     } catch (error) {
         next(error);
     }
