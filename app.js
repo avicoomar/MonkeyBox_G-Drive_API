@@ -5,7 +5,6 @@ const path = require('path');
 
 const fs = require('fs');
 
-
 const app = express();
 dotenv.config();
 
