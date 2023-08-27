@@ -206,7 +206,7 @@ app.get('/revoke/google', async (req, res, next) => {
 
         // Revoke Google token
         oAuth2Client.setCredentials({ access_token: accessToken });
-        await oAuth2Client.revokeToken();
+        await oAuth2Client.revokeToken(accessToken);
 
         const coll = client.db("MonkeyBoxAssessmentDB").collection("MonkeyBoxAssessmentCollection");
         coll.updateOne(
