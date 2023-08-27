@@ -22,7 +22,7 @@ app.use(cors({
 //----mongoDb related stuff----
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://avnaneet:Avnaneet%40123@cluster0.ctszd6b.mongodb.net/?retryWrites=true&w=majority";
-//Please don't hack me, the account above is an unverified dummy google account :) 
+//Please don't hack me, the account above is an unverified dummy google account anyway :) 
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
