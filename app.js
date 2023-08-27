@@ -202,7 +202,7 @@ app.get('/revoke/google', async (req, res, next) => {
     try {
         await connectMongoDB();
         const creds = await getMongoDBCreds();
-        const accessToken = JSON.parse(creds).access_token;
+        const accessToken = creds.access_token;
 
         // Revoke Google token
         oAuth2Client.setCredentials({ access_token: accessToken });
