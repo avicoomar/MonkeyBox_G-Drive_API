@@ -28,7 +28,7 @@ const client = new MongoClient(uri, {
     }
 });
 
-// Google OAuth2 setup
+// Google OAuth2 setup 
 const oAuth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
