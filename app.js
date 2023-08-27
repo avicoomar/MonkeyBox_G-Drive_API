@@ -22,7 +22,7 @@ app.use(cors({
 //----mongoDb related stuff----
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.MONGODB_URI;
-//Please don't hack me, the account above is an unverified dummy google account anyway :) 
+
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
