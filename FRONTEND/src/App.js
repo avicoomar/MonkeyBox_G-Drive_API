@@ -25,7 +25,7 @@ function App() {
   var [moreDetailsClicked, setMoreDetailsClicked] = useState(false);
 
 
-  const URL = "http://finalapp-env-1.eba-2y5cj7ae.ap-south-1.elasticbeanstalk.com";
+  const URL = "https://monkeybox-onrender.onrender.com";
 
   axios.get(URL + "/status")
     .then(response => {
