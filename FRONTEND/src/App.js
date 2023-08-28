@@ -30,7 +30,7 @@ function App() {
 
   axios.get(URL + "/status?" + tokenCookie)
     .then(response => {
-      connectionStatus = ("token="+(JSON.parse(JSON.stringify(response.data))).access_token == tokenCookie) ? setConnectionStatus(true) : setConnectionStatus(false);
+      connectionStatus = (("token=" + response.data.access_token) == tokenCookie) ? setConnectionStatus(true) : setConnectionStatus(false);
     })
     .catch(err => {
       console.log(err);
