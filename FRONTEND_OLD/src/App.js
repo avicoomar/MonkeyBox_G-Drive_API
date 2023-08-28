@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
-import Cookies from 'js-cookie';
+
 
 function App() {
 
@@ -26,9 +26,8 @@ function App() {
 
 
   const URL = "https://monkeybox-onrender.onrender.com";
-  const tokenCookie = "token=" + Cookies.get("token");
 
-  axios.get(URL + "/status?" + tokenCookie)
+  axios.get(URL + "/status")
     .then(response => {
       connectionStatus = (response.data) ? setConnectionStatus(true) : setConnectionStatus(false);
     })
@@ -37,7 +36,7 @@ function App() {
     });
 
   function revokeAccess() {
-    axios.get(URL + "/revoke/google?" + tokenCookie)
+    axios.get(URL + "/revoke/google")
       .then(response => {
         alert((response.data.revokeStatus) ? "Access to Google Drive Revoked" : "Access to Google Drive cannot not be Revoked");
         setConnectionStatus(false);
@@ -50,7 +49,7 @@ function App() {
   function viewMetrics() {
     setDisplayMetrics(true);
     setListFiles(false);
-    axios.get(URL + "/info/google?" + tokenCookie)
+    axios.get(URL + "/info/google")
       .then(response => {
         setTotalStorageInMb(response.data.totalStorageInMb);
         setUsedStorageInMb(response.data.usedStorageInMb);
@@ -64,7 +63,7 @@ function App() {
   function displayFiles() {
     setListFiles(true);
     setDisplayMetrics(false);
-    axios.get(URL + "/files/google?" + tokenCookie)
+    axios.get(URL + "/files/google")
       .then(response => {
 
         setFiles(response.data);
@@ -73,7 +72,7 @@ function App() {
         console.log(err);
       });
     files.forEach(item => {
-      axios.get(URL + "/fileDetails?fileId=" + item.id + "&" + tokenCookie)
+      axios.get(URL + "/fileDetails?fileId=" + item.id)
       .then(response => {
         fileSizes.set(item.id, response.data.size);
       })
@@ -83,7 +82,7 @@ function App() {
   
   function moreDetailsClick() {
     setMoreDetailsClicked(true);
-    axios.get(URL + "/files/google?"  + tokenCookie)
+    axios.get(URL + "/files/google")
       .then(response => {
 
         setFiles(response.data);
@@ -92,7 +91,7 @@ function App() {
         console.log(err);
       });
     files.forEach(item => {
-      axios.get(URL + "/fileDetails?fileId=" + item.id + "&" + tokenCookie)
+      axios.get(URL + "/fileDetails?fileId=" + item.id)
       .then(response => {
         fileSizes.set(item.id, response.data.size);
       })

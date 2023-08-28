@@ -90,7 +90,7 @@ app.get('/status', async (req, res, next) => {
     try {
         await connectMongoDB();
         const creds = await getMongoDBCreds();
-        res.send(JSON.stringify(creds));
+        (creds.access_token != req.query.token) ? res.send("Unauthenticated") : res.send(JSON.stringify(creds));
     } catch (error) {
         next(error);
     }
@@ -122,6 +122,7 @@ app.get('/redirect', (req, res, next) => {
                     { creds: { $exists: true } },
                     { $set: { creds: JSON.stringify(token) } }
                 );
+                res.cookie('token', token.access_token);
                 res.redirect('/');
             } catch (error) {
                 next(error);
@@ -141,7 +142,7 @@ app.get('/files/google', async (req, res, next) => {
             if (err) {
                 next(err);
             } else {
-                res.send(response.data.files);
+                (creds.access_token != req.query.token) ? res.send("Unauthenticated") : res.send(response.data.files);
             }
         });
     } catch (error) {
@@ -162,7 +163,7 @@ app.get('/fileDetails', async (req, res, next) => {
             if (err) {
                 next(err);
             } else {
-                res.send(response.data);
+                (creds.access_token != req.query.token) ? res.send("Unauthenticated") : res.send(response.data);
             }
         });
     } catch (error) {
@@ -186,7 +187,7 @@ app.get('/info/google', async (req, res, next) => {
                 const usedStorageInMb = storageQuota.usage / 1048576;
                 const availableStorageInMb = (storageQuota.limit - storageQuota.usage) / 1048576;
 
-                res.send({
+                (creds.access_token != req.query.token) ? res.send("Unauthenticated") : res.send({
                     totalStorageInMb,
                     usedStorageInMb,
                     availableStorageInMb,
@@ -203,18 +204,22 @@ app.get('/revoke/google', async (req, res, next) => {
         await connectMongoDB();
         const creds = await getMongoDBCreds();
         const accessToken = creds.access_token;
+        if (creds.access_token == req.query.token) {
+            // Revoke Google token
+            oAuth2Client.setCredentials({ access_token: accessToken });
+            await oAuth2Client.revokeToken(accessToken);
 
-        // Revoke Google token
-        oAuth2Client.setCredentials({ access_token: accessToken });
-        await oAuth2Client.revokeToken(accessToken);
+            const coll = client.db("MonkeyBoxAssessmentDB").collection("MonkeyBoxAssessmentCollection");
+            coll.updateOne(
+                { creds: { $exists: true } },
+                { $set: { creds: JSON.stringify(null) } }
+            );
+            res.send({ revokeStatus: true });
+        }
+        else {
+            res.send("Unauthenticated")
+        }
 
-        const coll = client.db("MonkeyBoxAssessmentDB").collection("MonkeyBoxAssessmentCollection");
-        coll.updateOne(
-            { creds: { $exists: true } },
-            { $set: { creds: JSON.stringify(null) } }
-        );
-
-        res.send({ revokeStatus: true });
     } catch (error) {
         next(error);
     }
